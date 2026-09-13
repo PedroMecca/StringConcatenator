@@ -1,4 +1,4 @@
-package com.example.stringconcatenator.navigation
+package br.edu.ifsp.scl.sc303500x.stringconcatenator.navigation
 
 import android.net.Uri
 
