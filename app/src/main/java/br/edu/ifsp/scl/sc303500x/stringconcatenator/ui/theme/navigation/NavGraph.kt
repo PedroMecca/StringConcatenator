@@ -1,6 +1,8 @@
 package br.edu.ifsp.scl.sc303500x.stringconcatenator.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -14,6 +16,8 @@ import androidx.navigation.navArgument
 import br.edu.ifsp.scl.sc303500x.stringconcatenator.ui.AddWordScreen
 import br.edu.ifsp.scl.sc303500x.stringconcatenator.ui.HomeScreen
 
+private const val NEW_WORD_KEY = "new_word"
+
 @Composable
 fun AppNavGraph(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
@@ -26,6 +30,18 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
 
         composable(Screen.Home.route) {
             var currentString by rememberSaveable { mutableStateOf("") }
+
+            val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+            val returnedWord = savedStateHandle
+                ?.getStateFlow<String?>(NEW_WORD_KEY, null)
+                ?.collectAsState()
+
+            LaunchedEffect(returnedWord?.value) {
+                returnedWord?.value?.let { word ->
+                    currentString = concatenate(currentString, word)
+                    savedStateHandle.remove<String>(NEW_WORD_KEY)
+                }
+            }
 
             HomeScreen(
                 currentString = currentString,
@@ -46,10 +62,16 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
 
             AddWordScreen(
                 currentString = receivedString,
-                onConcatenateClick = {
+                onConcatenateClick = { word ->
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(NEW_WORD_KEY, word)
                     navController.popBackStack()
                 }
             )
         }
     }
 }
+
+private fun concatenate(current: String, word: String): String =
+    if (current.isEmpty()) word else "$current $word"
