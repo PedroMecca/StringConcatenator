@@ -1,6 +1,5 @@
-package br.edu.ifsp.scl.sc303500x.stringconcatenator.ui.theme
+package br.edu.ifsp.scl.sc303500x.stringconcatenator.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

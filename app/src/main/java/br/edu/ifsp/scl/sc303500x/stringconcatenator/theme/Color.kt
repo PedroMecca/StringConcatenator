@@ -1,4 +1,4 @@
-package br.edu.ifsp.scl.sc303500x.stringconcatenator.ui.theme
+package br.edu.ifsp.scl.sc303500x.stringconcatenator.theme
 
 import androidx.compose.ui.graphics.Color
 
